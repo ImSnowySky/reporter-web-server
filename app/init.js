@@ -1,51 +1,61 @@
-const checkModelsAndControllers = (models, controllers) => {
-  const modelsWithControllers = models.filter(
-    model => !!controllers.find(
-      controller => controller === model
-    )
-  );
+const express = require('express');
+let app = null;
 
-  if (modelsWithControllers.length === models.length) {
-    console.info('Every model have own controller');
-    return true;
+const getMethodURL = (controller, method) => `/${controller.toLowerCase()}/${method.toLowerCase()}`;
+
+const getResponseOrError = (controller, method, methodFn = () => { throw new Error('Method is not init') }) => {
+  const baseObject = { controller: controller.toLowerCase(), method: method.toLowerCase() }
+  try {
+    return {...baseObject, status: 'OK', result: methodFn() }
+  } catch (e) {
+    return { ...baseObject, status: 'Error', result: e.message }
   }
+}
 
-  const modelsWithoutControllers = models.filter(
-    model => !controllers.find(
-      controller => controller === model
-    )
-  );
+const createGetListeners = (controller, methods, app = createOrGetApplication()) => {
+  methods.forEach(method => {
+    const methodFn = require(`./controllers/${controller}Controller/index`).get[method];
+    app.get(getMethodURL(controller, method), (_, res) => res.send(
+      getResponseOrError(controller, method, methodFn)
+    ))
+  });
+}
 
-  console.warn('Not every model have own controller. Models without controllers: ');
-  modelsWithoutControllers.forEach(model => console.log(`-- ${model} [app/models/${model}Model]`));
-  return false;
-};
+const createPostListeners = (controller, methods, app = createOrGetApplication()) => {
+  methods.forEach(method => {
+    const methodFn = require(`./controllers/${controller}Controller/index`).post[method];
+    app.post(getMethodURL(controller, method), (_, res) => res.send(
+      getResponseOrError(controller, method, methodFn)
+    ))
+  });
+}
 
-const checkControllersMethods = (controllersMethods) => {
-  const isSomeWithoutMethods = Object.keys(controllersMethods).find(controller => controllersMethods[controller] === false);
-  if (!isSomeWithoutMethods) {
-    console.info('Every controller have at least one method');
-    return true;
-  }
+const createOrGetApplication = () => {
+  if (!app) app = express();
+  return app;
+}
 
-  console.warn('Some controllers have no at least one method. Controllers without any method: ');
-  Object.keys(controllersMethods)
-    .map(controller => ({
-      name: controller,
-      withMethods: (
-        !!controllersMethods[controller].get ||
-        !!controllersMethods[controller].post ||
-        !!controllersMethods[controller].put ||
-        !!controllersMethods[controller].delete
-      )
-    }))
-    .filter(obj => !obj.withMethods)
-    .forEach(obj => console.log(`-- ${obj.name} [app/controllers/${obj.name}Controller]`))
-
-  return false;
+const initControllerRequest = (app, controller, methods) => {
+  Object.keys(methods).forEach(methodType => {
+    if (!methods[methodType]) return;  
+    switch (methodType) {
+      case 'get':
+        createGetListeners(controller, methods[methodType])
+        break;
+      case 'post':
+        createPostListeners(controller, methods[methodType])
+        break;
+      case 'put':
+        break;
+      case 'delete':
+        break;
+      default:
+        break;
+    }
+  })
 }
 
 module.exports = {
-  checkModelsAndControllers,
-  checkControllersMethods,
+  createOrGetApplication,
+  initControllerRequest,
 };

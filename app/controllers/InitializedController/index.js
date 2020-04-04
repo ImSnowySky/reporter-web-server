@@ -1,5 +1,5 @@
 const get = {
-  init: () => false,
+  init: () => false
 };
 
 module.exports = { get }
