@@ -21,7 +21,7 @@ const getRouteObjectAsURLArray = routeObject => {
       const objectURLS = getRouteObjectAsURLArray(child);
       objectURLS.forEach(url => {
         const updatedURL = url;
-        updatedURL.path = `${routeObject.name}/${url.path}`;
+        updatedURL.path = `${routeObject.name}\\${url.path}`;
         urls.push(updatedURL);
       })
     });

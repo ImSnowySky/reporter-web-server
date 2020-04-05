@@ -1,8 +1,7 @@
-const { getExpress, getRoutes } = require('./app/init');
+const { createApp } = require('./app/init');
 
 
 (async() => {
-  const app = getExpress();
-  const routes = getRoutes();
-  console.log(routes);
+  const app = createApp();
+  app.listen(3000, () => console.log('listening'));
 })()
