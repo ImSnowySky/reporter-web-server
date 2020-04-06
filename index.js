@@ -1,7 +1,9 @@
-const { createApp } = require('./app/init');
+const createServer = require('./app/init/server');
+const createDB = require('./app/init/db');
 
 
 (async() => {
-  const app = createApp();
+  const db = await createDB();
+  const app = createServer();
   app.listen(3000, () => console.log('listening'));
 })()
