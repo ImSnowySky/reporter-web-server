@@ -1,5 +1,5 @@
 const methods = {
-  get: () => false,
+  get: async (db) => true,
 };
 
 module.exports = methods;

@@ -11,8 +11,8 @@ const getExpress = () => {
 
 const getRoutes = () => formRoutesFromConfig(routes);
 
-const createServer = (app = getExpress(), routes = getRoutes()) => {
-  makeAppListenRoutes(app, routes);
+const createServer = (db, app = getExpress(), routes = getRoutes()) => {
+  makeAppListenRoutes(app, routes, db);
   return app;
 }
 

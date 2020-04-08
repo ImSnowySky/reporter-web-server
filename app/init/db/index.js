@@ -1,7 +1,6 @@
 const dbConfig = require('../../../config/db');
 const ExtendedDB = require('./classes/ExtendedDB');
 const mysql = require('mysql');
-const migrateUsers = require('./migrations/users');
 
 let connection = null;
 
@@ -14,10 +13,5 @@ const getDBConnection = () => {
 };
 
 const getExtendedDB = (dbConnection = getDBConnection()) => new ExtendedDB(dbConnection);
-
-const createDB = async (db = getExtendedDB()) => {
-  await migrateUsers(db);
-  return db;
-}
-
+const createDB = async (db = getExtendedDB()) => db;
 module.exports = createDB;

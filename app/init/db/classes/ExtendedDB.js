@@ -1,6 +1,16 @@
+const ExtendedTable = require('./ExtendedTable');
+
 class ExtendedDB {
   constructor(connection) {
     this.connection = connection;
+  }
+
+  getTable = async (name) => {
+    const tablesWithName = await this.query(`SHOW TABLES LIKE '${name}'`);
+    if (tablesWithName && tablesWithName.length > 0) {
+      return new ExtendedTable({ db: this, name });
+    }
+    else throw Error(`No table with name ${name} founded`);
   }
 
   query = (query) => {
@@ -12,10 +22,6 @@ class ExtendedDB {
       })
     })
   }
-
-  isTableExists = async (tableName) => await this.query(`SHOW TABLES LIKE '${tableName}'`);
-  getTableStructure = async (tableName) => await this.query(`SHOW COLUMNS FROM ${tableName}`);
-  dropTable = async (tableName) => await this.query(`DROP TABLE ${tableName}`);
 }
 
 module.exports = ExtendedDB;
