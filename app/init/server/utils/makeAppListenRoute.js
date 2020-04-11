@@ -1,7 +1,11 @@
-const createRouteListener = (route, methodName, method, db) => async (_, res) => {
+const createRouteListener = (route, methodName, method, db) => async (req, res) => {
   const answer = { route, method: methodName };
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Credentials', 'true');
+
   try {
-    const result = await method(db);
+    const result = await method(req, db);
     answer.status = 'OK';
     answer.response = result;
     res.send(answer);

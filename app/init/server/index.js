@@ -2,10 +2,16 @@ const express = require('express');
 const formRoutesFromConfig = require('./utils/formRoutesFromConfig');
 const makeAppListenRoutes = require('./utils/makeAppListenRoute');
 const routes = require('../../../config/routes');
+const cors = require('cors');
+const bodyParser = require('body-parser');
 let app = null;
 
 const getExpress = () => {
-  if (!app) app = express();
+  if (!app) {
+    app = express();
+    app.use(bodyParser.json());
+    app.use(cors({ origin: 'http://localhost:3000'}));
+  }
   return app;
 }
 

@@ -7,7 +7,6 @@ let connection = null;
 const getDBConnection = () => {
   if (!connection) {
     connection = mysql.createConnection(dbConfig);
-    connection.connect();
   }
   return connection;
 };

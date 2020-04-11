@@ -14,10 +14,12 @@ class ExtendedDB {
   }
 
   query = (query) => {
+    this.connection.connect();
     if (!this.connection) throw Error('No DB connection');
     return new Promise((res, reject) => {
       this.connection.query(query, (error, results) => {
         if (error) reject(error);
+        this.connection.close();
         res(results);
       })
     })
