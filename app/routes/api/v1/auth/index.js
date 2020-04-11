@@ -7,8 +7,18 @@ const methods = {
   },
   //temporary for registration
   post: async(request, db) => {
-    console.log(request);
-    return true;
+    const { body } = request.body;
+
+    if (!body || !body.login || !body.password) {
+      throw Error('No login or password presented');
+    }
+
+    const hash = crypto
+      .createHmac('sha256', body.login)
+      .update(body.password)
+      .digest('hex');
+
+    return hash;
   },
 };
 
