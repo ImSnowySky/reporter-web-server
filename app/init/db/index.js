@@ -5,9 +5,7 @@ const mysql = require('mysql');
 let connection = null;
 
 const getDBConnection = () => {
-  if (!connection) {
-    connection = mysql.createConnection(dbConfig);
-  }
+  if (!connection) connection = mysql.createPool(dbConfig);
   return connection;
 };
 

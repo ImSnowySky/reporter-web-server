@@ -11,6 +11,7 @@ const createRouteListener = (route, methodName, method, db) => async (req, res) 
     res.status(200).send(answer);
     return true;
   } catch (e) {
+    console.log(e);
     answer.status = 'Error';
     answer.response = e.message;
     res.status(500).send(answer);
