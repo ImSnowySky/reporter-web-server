@@ -5,6 +5,7 @@ const routes = {
     v1: {
       init: [methods.get],
       auth: [methods.get, methods.post],
+      error: [methods.get, methods.post],
     },
   },
 };

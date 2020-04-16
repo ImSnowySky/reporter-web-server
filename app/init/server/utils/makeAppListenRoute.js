@@ -1,9 +1,5 @@
 const createRouteListener = (route, methodName, method, db) => async (req, res) => {
   const answer = { route, method: methodName };
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Credentials', 'true');
-
   try {
     const result = await method(req, db);
     answer.status = 'OK';
@@ -11,7 +7,6 @@ const createRouteListener = (route, methodName, method, db) => async (req, res) 
     res.status(200).send(answer);
     return true;
   } catch (e) {
-    console.log(e);
     answer.status = 'Error';
     answer.response = e.message;
     res.status(500).send(answer);
