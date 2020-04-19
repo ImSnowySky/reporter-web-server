@@ -1,5 +1,4 @@
 const methods = {
-  get: async () => true,
   post: async(request, db) => {
     const {
       type,
@@ -37,12 +36,12 @@ const methods = {
       display_width: Number(display_width),
       display_height: Number(display_height),
       user_agent: db.connection.escape(user_agent),
-      user_time: db.connection.escape(new Date(user_time).toUTCString()),
-      server_time: db.connection.escape(new Date().toUTCString()),
+      user_time: db.connection.escape(new Date(user_time).toISOString()),
+      server_time: db.connection.escape(new Date().toISOString()),
     };
 
     try {
-      await db.query(`
+      const result = await db.query(`
         INSERT INTO errors
           (
             type, message, line_number, url, 
@@ -50,7 +49,7 @@ const methods = {
             display_width, display_height, user_agent,
             user_time, server_time
           ) 
-        VALUES 
+        VALUES
           (
             ${escapedInfo.type}, ${escapedInfo.message}, ${escapedInfo.line_number}, ${escapedInfo.url},
             ${escapedInfo.platform}, ${escapedInfo.os}, ${escapedInfo.os_version}, ${escapedInfo.browser}, ${escapedInfo.browser_version},
@@ -58,7 +57,9 @@ const methods = {
             ${escapedInfo.user_time}, ${escapedInfo.server_time}
           )
       `);
-      return true;
+
+      const insertedID = result.insertId;
+      return insertedID;
     } catch (e) {
       throw Error(`Request have error: ${e}`);
     }
