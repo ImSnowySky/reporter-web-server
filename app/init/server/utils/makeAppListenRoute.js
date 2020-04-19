@@ -9,6 +9,7 @@ const createRouteListener = (route, methodName, method, db) => async (req, res) 
   } catch (e) {
     answer.status = 'Error';
     answer.response = e.message;
+    console.log(`Error on route: ${route}. ${e}`);
     res.status(500).send(answer);
     return false;
   }

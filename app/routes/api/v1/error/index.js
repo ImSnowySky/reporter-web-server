@@ -15,14 +15,14 @@ const methods = {
       display_width,
       display_height,
       user_time,
-    } = request.query;
+    } = request.body;
 
     if (!message) throw Error('No message presented');
     if (!url) throw Error('No URL presented');
     if (!platform) throw Error('No platform presented');
     if (!os) throw Error('No OS presented');
     if (!browser) throw Error('No browser');
-    if (!userAgent) throw Error('No UA presented');
+    if (!user_agent) throw Error('No UA presented');
 
     const escapedInfo = {
       type: db.connection.escape(type),
@@ -37,11 +37,9 @@ const methods = {
       display_width: Number(display_width),
       display_height: Number(display_height),
       user_agent: db.connection.escape(user_agent),
-      user_time: db.connection.escape(user_time),
-      server_time: new Date().toUTCString(),
+      user_time: db.connection.escape(new Date(user_time).toUTCString()),
+      server_time: db.connection.escape(new Date().toUTCString()),
     };
-
-    console.log(escapedInfo);
 
     try {
       await db.query(`
