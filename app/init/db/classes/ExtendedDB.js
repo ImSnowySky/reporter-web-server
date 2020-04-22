@@ -15,6 +15,7 @@ class ExtendedDB {
 
   query = (query) => {
     if (!this.connection) throw Error('No DB connection');
+    console.log(`MYSQL QUERY: ${query}`);
     return new Promise((res, reject) => {
       this.connection.query(query, (error, results) => {
         if (error) reject(error);

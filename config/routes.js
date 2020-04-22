@@ -6,7 +6,7 @@ const routes = {
       init: [methods.get],
       auth: [methods.get, methods.post],
       error: [methods.post],
-      get_visitor_id: [methods.get],
+      visitor_id: [methods.post],
     },
   },
 };
