@@ -1,6 +1,15 @@
 const escapedObject = require('../../../../shared/escapeObject');
 
-const reportAboutError = async (request, db) => {
+const registerNewReport = async (request, db) => {
+  try {
+    const result = await db.query(`INSERT INTO event_id VALUES()`);
+    return result.insertId;
+  } catch (e) {
+    throw Error(e);
+  }
+}
+
+const reportAboutError = async (id, request, db) => {
   const {
     message,
     line_number,
@@ -14,8 +23,8 @@ const reportAboutError = async (request, db) => {
 
   try {
     const result = await db.query(`
-      INSERT INTO error (message, line_number, url)
-      VALUES (${escapedInfo.message}, ${escapedInfo.line_number}, ${escapedInfo.url})
+      INSERT INTO error (id, message, line_number, url)
+      VALUES (${id}, ${escapedInfo.message}, ${escapedInfo.line_number}, ${escapedInfo.url})
     `);
     return result.insertId;
   } catch (e) {
@@ -50,11 +59,11 @@ const methods = {
     const userID = await getUserIDByHash(user_hash, request, db);
     const server_time = new Date().toISOString();
 
-    let id = null;
+    let id = await registerNewReport(request, db);
 
     switch (type) {
       case 'error':
-        id = await reportAboutError(request, db);
+        await reportAboutError(id, request, db);
         break;
       default:
         break;
