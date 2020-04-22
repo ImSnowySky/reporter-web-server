@@ -1,3 +1,4 @@
+const logger = require('../../../../app/shared/logger');
 const ExtendedTable = require('./ExtendedTable');
 
 class ExtendedDB {
@@ -15,7 +16,7 @@ class ExtendedDB {
 
   query = (query) => {
     if (!this.connection) throw Error('No DB connection');
-    console.log(`MYSQL QUERY: ${query}`);
+    logger.MYSQL_QUERY(query);
     return new Promise((res, reject) => {
       this.connection.query(query, (error, results) => {
         if (error) reject(error);

@@ -26,7 +26,7 @@ const methods = {
       const result = await db.query(`SELECT password_hash FROM users WHERE password_hash=${info.hash} LIMIT 1`);
       return result[0].password_hash;
     } catch(e) {
-      throw Error(`Request have error: ${e}`);
+      throw Error(e);
     }
   },
   post: async(request, db) => {
@@ -38,7 +38,7 @@ const methods = {
       await db.query(`INSERT INTO users (name, password_hash) VALUES (${info.login}, ${info.hash})`);
       return info.hash;
     } catch (e) {
-      throw Error(`Request have error: ${e}`);
+      throw Error(e);
     }
   },
 };

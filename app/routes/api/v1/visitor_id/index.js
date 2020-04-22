@@ -32,7 +32,7 @@ const methods = {
       `);
       return hash;
     } catch(e) {
-      throw Error(`Request have error: ${e}`);
+      throw Error(e);
     }
   },
 };
