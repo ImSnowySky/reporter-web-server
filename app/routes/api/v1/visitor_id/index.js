@@ -9,6 +9,7 @@ const methods = {
       os_version,
       browser,
       browser_version,
+      user_agent,
     } = request.body;
 
     const currentTime = new Date().toISOString();
@@ -20,14 +21,14 @@ const methods = {
       .update(userUniqueString)
       .digest('hex');
 
-    const escapedData = escapeObject({ hash, platform, os, os_version, browser, browser_version }, db);
+    const escapedData = escapeObject({ hash, platform, os, os_version, browser, browser_version, user_agent }, db);
   
     try {
       await db.query(`
         INSERT INTO visitors
-          (hash, platform, os, os_version, browser, browser_version)
+          (hash, platform, os, os_version, browser, browser_version, user_agent)
         VALUES
-          (${escapedData.hash}, ${escapedData.platform}, ${escapedData.os}, ${escapedData.os_version}, ${escapedData.browser}, ${escapedData.browser_version})
+          (${escapedData.hash}, ${escapedData.platform}, ${escapedData.os}, ${escapedData.os_version}, ${escapedData.browser}, ${escapedData.browser_version}, ${escapedData.user_agent})
       `);
       return hash;
     } catch(e) {
