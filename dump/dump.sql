@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS `event_id`;
 CREATE TABLE IF NOT EXISTS `event_id` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='Polymorphic Associations with foreign key';
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='Polymorphic Associations with foreign key';
 
 -- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.users
@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `name` tinytext NOT NULL,
   `password_hash` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.visitors
@@ -60,12 +60,13 @@ CREATE TABLE IF NOT EXISTS `visitors` (
   `user_agent` tinytext,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
 
 -- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.visitor_event
 DROP TABLE IF EXISTS `visitor_event`;
 CREATE TABLE IF NOT EXISTS `visitor_event` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `visitor_id` int(11) unsigned NOT NULL,
   `event_type` tinytext,
   `event_id` int(11) NOT NULL,
@@ -73,11 +74,12 @@ CREATE TABLE IF NOT EXISTS `visitor_event` (
   `server_fired_at` tinytext,
   `display_width` int(11) DEFAULT NULL,
   `display_height` int(11) DEFAULT NULL,
-  PRIMARY KEY (`visitor_id`),
+  PRIMARY KEY (`id`),
+  KEY `FK_visitor_event_visitors` (`visitor_id`),
   KEY `FK_visitor_event_event_id` (`event_id`),
   CONSTRAINT `FK_visitor_event_event_id` FOREIGN KEY (`event_id`) REFERENCES `event_id` (`id`),
   CONSTRAINT `FK_visitor_event_visitors` FOREIGN KEY (`visitor_id`) REFERENCES `visitors` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- Экспортируемые данные не выделены.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
