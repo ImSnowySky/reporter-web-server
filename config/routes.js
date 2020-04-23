@@ -7,6 +7,7 @@ const routes = {
       auth: [methods.get, methods.post],
       report: [methods.post],
       visitor_id: [methods.post],
+      visitor_hash_exists: [methods.get],
     },
   },
 };
