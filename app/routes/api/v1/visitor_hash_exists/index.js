@@ -8,7 +8,7 @@ const methods = {
     
     try {
       const result = await db.query(`SELECT hash FROM visitors WHERE hash=${escapedInfo.hash} LIMIT 1`);
-      return result && result.length && result.length > 0;
+      return { body: result && result.length && result.length > 0 };
     } catch(e) {
       throw Error(e);
     }

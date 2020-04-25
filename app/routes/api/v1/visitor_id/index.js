@@ -30,7 +30,7 @@ const methods = {
         VALUES
           (${escapedData.hash}, ${escapedData.platform}, ${escapedData.os}, ${escapedData.os_version}, ${escapedData.browser}, ${escapedData.browser_version}, ${escapedData.user_agent})
       `);
-      return hash;
+      return { body: hash };
     } catch(e) {
       throw Error(e);
     }

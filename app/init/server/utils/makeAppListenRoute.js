@@ -4,12 +4,20 @@ const createRouteListener = (route, methodName, method, db) => async (req, res) 
   const answer = { route, method: methodName };
   logger.REQUEST_STARTED(route);
   try {
-    const result = await method(req, db);
-    answer.status = 'OK';
-    answer.response = result;
-    res.status(200).send(answer);
-    logger.REQUEST_SUCCESS(route);
-    return true;
+    const {
+      body = `No body returned from method ${methodName} on route ${route}`,
+      status = 'OK',
+      statusCode = 200,
+    } = await method(req, db);
+
+    answer.status = status;
+    answer.response = body;
+    res.status(statusCode).send(answer);
+    status === 'OK'
+      ? logger.REQUEST_SUCCESS(route)
+      : logger.REQUEST_FAILED(route, body);
+
+    return status === 'OK';
   } catch (e) {
     answer.status = 'Error';
     answer.response = e.message;

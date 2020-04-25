@@ -1,5 +1,5 @@
 const methods = {
-  get: async () => true,
+  get: async () => ({ body: true }),
 };
 
 module.exports = methods;

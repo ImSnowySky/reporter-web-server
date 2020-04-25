@@ -94,7 +94,7 @@ const methods = {
             ${escapedInfo.display_width}, ${display_height}
           )
       `);
-      return true;
+      return { body: true };
     } catch (e) {
       throw Error(e);
     }

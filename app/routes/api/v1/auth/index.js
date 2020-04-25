@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const logger = require('../../../../shared/logger')
 
 const getEscapedUserInfo = (login, password, connection) => {
   const escaped = {
@@ -24,7 +25,7 @@ const methods = {
     
     try {
       const result = await db.query(`SELECT password_hash FROM users WHERE password_hash=${info.hash} LIMIT 1`);
-      return result[0].password_hash;
+      return { body: result[0].password_hash };
     } catch(e) {
       throw Error(e);
     }
@@ -36,9 +37,15 @@ const methods = {
 
     try {
       await db.query(`INSERT INTO users (name, password_hash) VALUES (${info.login}, ${info.hash})`);
-      return info.hash;
+      return { body: info.hash }
     } catch (e) {
-      throw Error(e);
+      const errCode = e.message.split(': ')[0];
+      switch (errCode) {
+        case ('ER_DUP_ENTRY'):
+          return { status: 'Error', body: 'Login is busy' };
+        default:
+          throw Error(e);
+      }
     }
   },
 };
