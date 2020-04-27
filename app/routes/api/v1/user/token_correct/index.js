@@ -2,7 +2,7 @@ const escapeObject = require('../../../../../shared/escapeObject');
 
 const methods = {
   get: async (request, db) => {
-    const { token } = request.query;
+    const token = request.cookies['auth-token'];
     if (!token) throw Error ('No token presented');
     const escapedInfo = escapeObject({ token }, db);
     

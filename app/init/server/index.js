@@ -2,6 +2,7 @@ const express = require('express');
 const formRoutesFromConfig = require('./utils/formRoutesFromConfig');
 const makeAppListenRoutes = require('./utils/makeAppListenRoute');
 const allowCORS = require('./utils/allowCORS');
+const cookieParser = require('cookie-parser');
 const routes = require('../../../config/routes');
 const bodyParser = require('body-parser');
 let app = null;
@@ -11,6 +12,7 @@ const getExpress = () => {
     app = express();
     app.use(allowCORS);
     app.use(bodyParser.json());
+    app.use(cookieParser());
   }
   return app;
 }
