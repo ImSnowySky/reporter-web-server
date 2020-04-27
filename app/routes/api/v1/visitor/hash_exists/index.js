@@ -1,4 +1,4 @@
-const escapeObject = require('../../../../shared/escapeObject');
+const escapeObject = require('../../../../../shared/escapeObject');
 
 const methods = {
   get: async (request, db) => {

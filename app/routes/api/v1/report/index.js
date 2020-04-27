@@ -1,6 +1,6 @@
 const escapedObject = require('../../../../shared/escapeObject');
 
-const registerNewReport = async (request, db) => {
+const registerNewReport = async (db) => {
   try {
     const result = await db.query(`INSERT INTO event_id VALUES()`);
     return result.insertId;
@@ -32,6 +32,25 @@ const reportAboutError = async (id, request, db) => {
   }
 };
 
+const reportAboutBreadcrumb = async (id, request, db) => {
+  const { message, url } = request.body;
+
+  if (!message) throw Error('No message presensted');
+  if (!url) throw Error('No URL presented');
+
+  const escapedInfo = escapedObject({ message, url }, db);
+
+  try {
+    const result = await db.query(`
+      INSERT INTO breadcrumb (id, message, url)
+      VALUES (${id}, ${escapedInfo.message}, ${escapedInfo.url})
+    `);
+    return result.insertId;
+  } catch (e) {
+    throw Error(e)
+  }
+}
+
 const getUserIDByHash = async (hash, request, db) => {
   const escapedHash = db.connection.escape(hash);
 
@@ -59,13 +78,17 @@ const methods = {
     const userID = await getUserIDByHash(user_hash, request, db);
     const server_time = new Date().toISOString();
 
-    let id = await registerNewReport(request, db);
+    let id = await registerNewReport(db);
 
     switch (type) {
       case 'error':
         await reportAboutError(id, request, db);
         break;
+      case 'breadcrumb':
+        await reportAboutBreadcrumb(id, request, db);
+        break;
       default:
+        throw Error(`No report method for report type ${type} presented`);
         break;
     }
 

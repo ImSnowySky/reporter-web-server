@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const escapeObject = require('../../../../shared/escapeObject');
+const escapeObject = require('../../../../../shared/escapeObject');
 
 const methods = {
   post: async (request, db) => {

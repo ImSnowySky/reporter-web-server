@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const logger = require('../../../../shared/logger')
+const escapeObject = require('../../../../../shared/escapeObject');
 
 const getEscapedUserInfo = (login, password, connection) => {
   const escaped = {
@@ -24,8 +24,13 @@ const methods = {
     const info = getEscapedUserInfo(login, password, db.connection);
     
     try {
-      const result = await db.query(`SELECT password_hash FROM users WHERE password_hash=${info.hash} LIMIT 1`);
-      return { body: result[0].password_hash };
+      const result = await db.query(`SELECT id, password_hash FROM users WHERE password_hash=${info.hash} LIMIT 1`);
+      const expDate = new Date();
+      expDate.setDate(expDate.getDate() + 1);
+      const authToken = crypto.createHmac('sha256', expDate.toISOString()).update(result[0].password_hash).digest('hex');
+      const escapedUpdateInfo = escapeObject({ id: result[0].id, date: expDate.toISOString(), token: authToken }, db);
+      await db.query(`UPDATE users SET access_token=${escapedUpdateInfo.token}, token_active_for=${escapedUpdateInfo.date} WHERE id=${escapedUpdateInfo.id}`);
+      return { body: authToken };
     } catch(e) {
       throw Error(e);
     }
