@@ -17,6 +17,17 @@ DROP DATABASE IF EXISTS `reporter`;
 CREATE DATABASE IF NOT EXISTS `reporter` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `reporter`;
 
+-- Дамп структуры для таблица reporter.breadcrumb
+DROP TABLE IF EXISTS `breadcrumb`;
+CREATE TABLE IF NOT EXISTS `breadcrumb` (
+  `id` int(11) NOT NULL,
+  `message` tinytext NOT NULL,
+  `url` tinytext NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `FK_breadcrumb_event_id` FOREIGN KEY (`id`) REFERENCES `event_id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.error
 DROP TABLE IF EXISTS `error`;
 CREATE TABLE IF NOT EXISTS `error` (
@@ -34,17 +45,21 @@ DROP TABLE IF EXISTS `event_id`;
 CREATE TABLE IF NOT EXISTS `event_id` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COMMENT='Polymorphic Associations with foreign key';
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COMMENT='Polymorphic Associations with foreign key';
 
 -- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.users
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `name` tinytext NOT NULL,
-  `password_hash` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `name` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `access_token` varchar(255) DEFAULT NULL,
+  `token_active_for` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `access_token` (`access_token`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.visitors
@@ -60,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `visitors` (
   `user_agent` tinytext,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
 
 -- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.visitor_event
@@ -79,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `visitor_event` (
   KEY `FK_visitor_event_event_id` (`event_id`),
   CONSTRAINT `FK_visitor_event_event_id` FOREIGN KEY (`event_id`) REFERENCES `event_id` (`id`),
   CONSTRAINT `FK_visitor_event_visitors` FOREIGN KEY (`visitor_id`) REFERENCES `visitors` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 -- Экспортируемые данные не выделены.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

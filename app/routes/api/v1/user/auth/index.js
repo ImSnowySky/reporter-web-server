@@ -15,14 +15,14 @@ const getPasswordHash = (login, password) => crypto
 const methods = {
   get: async (request, db) => {
     const { login, password } = request.query;
-    if (!login || !password) throw Error ('No login or password presented');
+    if (!login || !password) throw Error ('NO_LOGIN_PASSWORD');
     const hash = getPasswordHash(login, password);
     const info = escapeObject({ hash }, db);
     
     try {
       const result = await db.query(`SELECT id, password_hash FROM users WHERE password_hash=${info.hash} LIMIT 1`);
       if (result.length === 0) {
-        return { body: 'Wrong login or password', status: 'Error' }
+        return { body: 'WRONG_LOGIN_PASSWORD', status: 'Error' }
       }
   
       const { expires, token } = generateAuthToken(result[0].password_hash);
@@ -48,7 +48,7 @@ const methods = {
       const errCode = e.message.split(': ')[0];
       switch (errCode) {
         case ('ER_DUP_ENTRY'):
-          return { status: 'Error', body: 'Login is busy' };
+          return { status: 'Error', body: 'LOGIN_IS_BUSY' };
         default:
           throw Error(e);
       }

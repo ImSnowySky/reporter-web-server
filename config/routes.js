@@ -12,6 +12,7 @@ const routes = {
         auth: [methods.get, methods.post],
         token_correct: [methods.get],
       },
+      errors: [methods.get],
       report: [methods.post],
     },
   },
