@@ -1,4 +1,4 @@
-const escapedObject = require('../../../../shared/escapeObject');
+const escapedObject = require('../../../../../shared/escapeObject');
 
 const registerNewReport = async (db) => {
   try {

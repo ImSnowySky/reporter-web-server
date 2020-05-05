@@ -1,5 +1,5 @@
-const getAuthToken = require('../../../../shared/getAuthToken');
-const isTokenCorrect = require('../user/token_correct')['get']; 
+const getAuthToken = require('../../../../../shared/getAuthToken');
+const isTokenCorrect = require('../../user/token_correct')['get']; 
 
 const methods = {
   get: async (request, db) => {

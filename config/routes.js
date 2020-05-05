@@ -4,7 +4,7 @@ const routes = {
   api: {
     v1: {
       init: [methods.get],
-      visitor: {
+      visitors: {
         create: [methods.post],
         hash_exists: [methods.get],
         info: {
@@ -15,8 +15,10 @@ const routes = {
         auth: [methods.get, methods.post],
         token_correct: [methods.get],
       },
-      errors: [methods.get],
-      report: [methods.post],
+      reports: {
+        create: [methods.post],
+        errors: [methods.get],
+      },
     },
   },
 };
