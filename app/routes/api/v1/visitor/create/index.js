@@ -21,14 +21,17 @@ const methods = {
       .update(userUniqueString)
       .digest('hex');
 
-    const escapedData = escapeObject({ hash, platform, os, os_version, browser, browser_version, user_agent }, db);
+    const escapedData = escapeObject({ hash, platform, os, os_version, browser, browser_version, user_agent, session_start: currentTime }, db);
   
     try {
       await db.query(`
         INSERT INTO visitors
-          (hash, platform, os, os_version, browser, browser_version, user_agent)
+          (hash, platform, os, os_version, browser, browser_version, user_agent, session_start)
         VALUES
-          (${escapedData.hash}, ${escapedData.platform}, ${escapedData.os}, ${escapedData.os_version}, ${escapedData.browser}, ${escapedData.browser_version}, ${escapedData.user_agent})
+          (
+            ${escapedData.hash},${escapedData.platform}, ${escapedData.os}, ${escapedData.os_version},
+            ${escapedData.browser}, ${escapedData.browser_version}, ${escapedData.user_agent}, ${escapedData.session_start}
+          )
       `);
       return { body: hash };
     } catch(e) {

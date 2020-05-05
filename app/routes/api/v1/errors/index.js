@@ -15,7 +15,7 @@ const methods = {
       const results = await db.query(`
         SELECT 
           visitor_event.id, visitor_event.server_fired_at,
-          visitors.platform, visitors.browser, visitors.browser_version,
+          visitors.platform, visitors.browser, visitors.browser_version, visitors.os, visitors.os_version,
           error.message, error.url	
         FROM visitor_event
         LEFT JOIN visitors ON visitors.id = visitor_event.visitor_id
@@ -47,9 +47,18 @@ const methods = {
           id: result.id,
           server_fired_at: result.server_fired_at,
           platform: result.platform,
-          browser: `${result.browser}`,
-          message: `${result.message}`,
-          url: `${result.url}`,
+          browser: {
+            name: result.browser,
+            version: result.browser_version,
+          },
+          os: {
+            name: result.os,
+            version: result.os_version,
+          },
+          error: {
+            message: result.message,
+            url: result.url,
+          },
         }))
         .sort((a, b) => b.id - a.id);
 

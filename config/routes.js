@@ -5,8 +5,11 @@ const routes = {
     v1: {
       init: [methods.get],
       visitor: {
-        id: [methods.post],
+        create: [methods.post],
         hash_exists: [methods.get],
+        info: {
+          short: [methods.get],
+        }
       },
       user: {
         auth: [methods.get, methods.post],
