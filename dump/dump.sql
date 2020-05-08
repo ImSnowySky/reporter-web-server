@@ -45,7 +45,7 @@ DROP TABLE IF EXISTS `event_id`;
 CREATE TABLE IF NOT EXISTS `event_id` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COMMENT='Polymorphic Associations with foreign key';
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8 COMMENT='Polymorphic Associations with foreign key';
 
 -- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.users
@@ -73,9 +73,10 @@ CREATE TABLE IF NOT EXISTS `visitors` (
   `browser` tinytext,
   `browser_version` tinytext,
   `user_agent` tinytext,
+  `session_start` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
 -- Экспортируемые данные не выделены.
 -- Дамп структуры для таблица reporter.visitor_event
@@ -85,8 +86,8 @@ CREATE TABLE IF NOT EXISTS `visitor_event` (
   `visitor_id` int(11) unsigned NOT NULL,
   `event_type` tinytext,
   `event_id` int(11) NOT NULL,
-  `user_fired_at` tinytext,
-  `server_fired_at` tinytext,
+  `user_fired_at` datetime DEFAULT NULL,
+  `server_fired_at` datetime DEFAULT NULL,
   `display_width` int(11) DEFAULT NULL,
   `display_height` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -94,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `visitor_event` (
   KEY `FK_visitor_event_event_id` (`event_id`),
   CONSTRAINT `FK_visitor_event_event_id` FOREIGN KEY (`event_id`) REFERENCES `event_id` (`id`),
   CONSTRAINT `FK_visitor_event_visitors` FOREIGN KEY (`visitor_id`) REFERENCES `visitors` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
 
 -- Экспортируемые данные не выделены.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

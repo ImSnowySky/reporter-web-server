@@ -7,9 +7,8 @@ const routes = {
       visitors: {
         create: [methods.post],
         hash_exists: [methods.get],
-        info: {
-          short: [methods.get],
-        }
+        info: [methods.get],
+        count: [methods.get],
       },
       user: {
         auth: [methods.get, methods.post],
@@ -18,6 +17,7 @@ const routes = {
       reports: {
         create: [methods.post],
         errors: [methods.get],
+        errors_count: [methods.get],
       },
     },
   },
