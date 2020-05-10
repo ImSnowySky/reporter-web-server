@@ -15,17 +15,24 @@ const methods = {
 
     try {
       const results = await db.query(`
-        SELECT 
-          visitors.id, visitors.hash, visitors.platform,
-          visitors.os, visitors.os_version, visitors.browser,
-          visitors.browser_version, visitors.user_agent, COUNT(*) AS errors_count,
-          visitors.session_start
-        FROM visitors
-        LEFT JOIN visitor_event ON visitor_event.visitor_id = visitors.id
-        WHERE
-          ${withError ? "visitor_event.event_type = 'error'" : 'TRUE'}
-          ${from ? `AND visitors.session_start >= ${info.from}` : ''}
-          ${to ? `AND visitors.session_start <= ${info.to}` : ''}
+        SELECT user_info.*, COUNT(visitor_id) AS events_count FROM (
+          SELECT 
+            visitors.id, visitors.hash, visitors.ip, visitors.platform,
+            visitors.os, visitors.os_version, visitors.browser,
+            visitors.browser_version, visitors.user_agent,
+            visitors.session_start,
+            COUNT(b.visitor_id) AS errors_count
+          FROM visitors
+          LEFT JOIN
+            (SELECT visitor_id, event_type FROM visitor_event) AS b ON b.visitor_id = visitors.id AND b.event_type = 'error'
+          WHERE
+            TRUE
+            ${from ? `AND visitors.session_start >= ${info.from}` : ''}
+            ${to ? `AND visitors.session_start <= ${info.to}` : ''}
+          GROUP BY id
+        ) AS user_info
+        LEFT JOIN (SELECT visitor_id FROM visitor_event) AS c ON c.visitor_id = user_info.id
+        WHERE ${withError ? 'user_info.errors_count > 0' : 'TRUE'} 
         GROUP BY id
         ORDER BY id DESC
         ${limit && !Number.isNaN(parseInt(limit)) ? `LIMIT ${parseInt(limit)}` : ''}
@@ -37,6 +44,7 @@ const methods = {
         .map(result => ({
           id: result.id,
           hash: result.hash,
+          ip: result.ip,
           platform: result.platform,
           os: {
            name: result.os,
@@ -46,6 +54,8 @@ const methods = {
             name: result.browser,
             version: result.browser_version,
           },
+          events_count: result.events_count,
+          errors_count: result.errors_count,
           user_agent: result.user_agent,
           error_count: result.error_count,
           session_start: result.session_start,
