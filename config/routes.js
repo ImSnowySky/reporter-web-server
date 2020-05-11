@@ -9,6 +9,7 @@ const routes = {
         hash_exists: [methods.get],
         info: [methods.get],
         count: [methods.get],
+        stories: [methods.get],
       },
       user: {
         auth: [methods.get, methods.post],

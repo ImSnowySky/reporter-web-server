@@ -16,8 +16,6 @@ const methods = {
     let ip = userIP(request);
     ip = ip === '::1' || ip === '::ffff:127.0.0.1' ? '127.0.0.1' : ip;
 
-    console.log(userIP(request));
-
     const currentTime = new Date().toISOString();
     const salt = String(Math.random());
     const userUniqueString = currentTime + salt;
