@@ -45,7 +45,7 @@ const methods = {
         .forEach(story => {
           if (!resultsAsObject[story.user]) resultsAsObject[story.user] = [];
           resultsAsObject[story.user].push({
-            type: story.event_type,
+            type: story.type,
             info: story.info,
             fired_at: story.fired_at,
           });
