@@ -35,7 +35,7 @@ const methods = {
         WHERE ${withError ? 'user_info.errors_count > 0' : 'TRUE'} 
         GROUP BY id
         ORDER BY id DESC
-        ${limit && !Number.isNaN(parseInt(limit)) ? `LIMIT ${parseInt(limit)}` : ''}
+        ${limit ? `LIMIT ${limit}` : ''}
       `);
 
       if (results.length === 0) return { body: [] };

@@ -22,7 +22,7 @@ const methods = {
         FROM (
           SELECT visitors.id, visitors.hash FROM visitors
           ORDER BY visitors.id DESC
-          ${limit && !Number.isNaN(parseInt(limit)) ? `LIMIT ${parseInt(limit)}` : ''}
+          ${limit ? `LIMIT ${limit}` : ''}
         ) AS visitors_hash
         LEFT JOIN visitor_event ON visitor_event.visitor_id = visitors_hash.id
         LEFT JOIN breadcrumb ON visitor_event.event_type = 'breadcrumb' AND breadcrumb.id = visitor_event.event_id
