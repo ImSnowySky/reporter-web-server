@@ -18,8 +18,8 @@ const methods = {
         SELECT user_info.*, COUNT(visitor_id) AS events_count FROM (
           SELECT 
             visitors.id, visitors.hash, visitors.ip, visitors.platform,
-            visitors.os, visitors.os_version, visitors.browser,
-            visitors.browser_version, visitors.user_agent,
+            visitors.os, visitors.os_version,
+            visitors.browser, visitors.browser_version, visitors.user_agent,
             visitors.session_start,
             COUNT(b.visitor_id) AS errors_count
           FROM visitors
